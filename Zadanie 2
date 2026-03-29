@@ -1,0 +1,81 @@
+#include <iostream>
+#include <string>
+#include <windows.h>
+using namespace std;
+
+int main() {
+setlocale(LC_ALL, "Russian");
+SetConsoleCP(1251);
+SetConsoleOutputCP(1251);
+string text;
+cout << "Введите строку: ";
+getline(cin, text);
+
+text = text + " ";
+
+string words[100];
+int word_count = 0;
+string word = "";
+
+for (int i = 0; i < text.length(); i++) {
+    if (text[i] != ' ' && text[i] != ',' && text[i] != '.' && text[i] != '!' && text[i] != '?' && text[i] != ';' && text[i] != ':') {
+        word = word + text[i];
+    }
+    else {
+        if (word != "") {
+            words[word_count] = word;
+            word_count++;
+            word = "";
+        }
+    }
+}
+
+if (word_count == 0) {
+    cout << "Строка не содержит слов" << endl;
+    return 0;
+}
+
+int max_index = -1;
+int min_index = -1;
+
+for (int i = 0; i < word_count; i++) {
+    bool is_number = true;
+    for (int j = 0; j < words[i].length(); j++) {
+        if (words[i][j] < '0' || words[i][j] > '9') {
+            is_number = false;
+            break;
+        }
+    }
+
+    if (is_number) {
+        continue;
+    }
+
+    if (max_index == -1) {
+        max_index = i;
+        min_index = i;
+    }
+    else {
+        if (words[i].length() > words[max_index].length()) {
+            max_index = i;
+        }
+        if (words[i].length() < words[min_index].length()) {
+            min_index = i;
+        }
+    }
+}
+
+if (max_index != -1 && min_index != -1) {
+    string temp = words[max_index];
+    words[max_index] = words[min_index];
+    words[min_index] = temp;
+}
+
+cout << "Результат: ";
+for (int i = 0; i < word_count; i++) {
+    cout << words[i] << " ";
+}
+cout << endl;
+
+return 0;
+}
